@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Interactive Compiler Phases Visualizer — upload code and see each compilation phase in action.">
+    <title>Compiler Phases Visualizer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="bg-particles" id="bgParticles"></div>
+
+    <header class="header" id="mainHeader">
+        <div class="header-content">
+            <div class="logo-group">
+                <div class="logo-icon">
+                    <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
+                        <rect x="2" y="2" width="32" height="32" rx="8" stroke="url(#logoGrad)" stroke-width="2.5"/>
+                        <path d="M10 13h16M10 18h12M10 23h8" stroke="url(#logoGrad)" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M22 20l4 4m0-4l-4 4" stroke="#f472b6" stroke-width="2" stroke-linecap="round"/>
+                        <defs><linearGradient id="logoGrad" x1="0" y1="0" x2="36" y2="36"><stop stop-color="#00d4ff"/><stop offset="1" stop-color="#7c3aed"/></linearGradient></defs>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="logo-title">Compiler Visualizer</h1>
+                    <p class="logo-subtitle">Interactive Compilation Pipeline</p>
+                </div>
+            </div>
+            <div class="header-actions">
+                <div class="preset-selector">
+                    <label for="presetSelect">Examples:</label>
+                    <select id="presetSelect">
+                        <option value="">— Select preset —</option>
+                        <option value="arithmetic">Arithmetic & Variables</option>
+                        <option value="ifelse">If-Else Statement</option>
+                        <option value="whileloop">While Loop</option>
+                        <option value="complex">Full Program</option>
+                    </select>
+                </div>
+                <button class="btn-compile" id="btnCompile"><span class="btn-icon">▶</span><span>Compile</span></button>
+                <button class="btn-clear" id="btnClear" title="Clear all">✕</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content" id="mainContent">
+        <section class="editor-panel" id="editorPanel">
+            <div class="panel-header">
+                <div class="panel-title-group">
+                    <div class="panel-dot red"></div>
+                    <div class="panel-dot yellow"></div>
+                    <div class="panel-dot green"></div>
+                    <span class="panel-title">source.c</span>
+                </div>
+                <div class="editor-stats" id="editorStats">
+                    <span id="lineCount">Lines: 0</span>
+                    <span id="charCount">Chars: 0</span>
+                </div>
+            </div>
+            <div class="editor-wrapper" id="editorWrapper">
+                <div class="line-numbers" id="lineNumbers"></div>
+                <textarea id="codeEditor" class="code-editor" spellcheck="false" placeholder="// Paste your code here or select a preset...
+
+int a = 10;
+int b = 20;
+int c = a + b * 2;
+print(c);"></textarea>
+            </div>
+            <div class="editor-error" id="editorError"></div>
+        </section>
+
+        <section class="phases-panel" id="phasesPanel">
+            <div class="pipeline-progress" id="pipelineProgress">
+                <div class="pipeline-bar" id="pipelineBar"></div>
+            </div>
+
+            <div class="phase-card" id="phase1" data-phase="1">
+                <div class="phase-header" data-toggle="phase1">
+                    <div class="phase-number">1</div>
+                    <div class="phase-info"><h2>Lexical Analysis</h2><p>Tokenization — Breaking source code into tokens</p></div>
+                    <div class="phase-status" id="phase1Status"></div>
+                    <div class="phase-chevron"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
+                </div>
+                <div class="phase-body" id="phase1Body"><div class="phase-content" id="phase1Content"><p class="phase-placeholder">Click "Compile" to see tokens...</p></div></div>
+            </div>
+
+            <div class="phase-card" id="phase2" data-phase="2">
+                <div class="phase-header" data-toggle="phase2">
+                    <div class="phase-number">2</div>
+                    <div class="phase-info"><h2>Syntax Analysis</h2><p>Parsing — Building the Abstract Syntax Tree</p></div>
+                    <div class="phase-status" id="phase2Status"></div>
+                    <div class="phase-chevron"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
+                </div>
+                <div class="phase-body" id="phase2Body"><div class="phase-content" id="phase2Content"><p class="phase-placeholder">Click "Compile" to see AST...</p></div></div>
+            </div>
+
+            <div class="phase-card" id="phase3" data-phase="3">
+                <div class="phase-header" data-toggle="phase3">
+                    <div class="phase-number">3</div>
+                    <div class="phase-info"><h2>Semantic Analysis</h2><p>Type checking, symbol table & scope resolution</p></div>
+                    <div class="phase-status" id="phase3Status"></div>
+                    <div class="phase-chevron"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
+                </div>
+                <div class="phase-body" id="phase3Body"><div class="phase-content" id="phase3Content"><p class="phase-placeholder">Click "Compile" to see semantic info...</p></div></div>
+            </div>
+
+            <div class="phase-card" id="phase4" data-phase="4">
+                <div class="phase-header" data-toggle="phase4">
+                    <div class="phase-number">4</div>
+                    <div class="phase-info"><h2>Intermediate Code Generation</h2><p>Three-Address Code (TAC) representation</p></div>
+                    <div class="phase-status" id="phase4Status"></div>
+                    <div class="phase-chevron"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
+                </div>
+                <div class="phase-body" id="phase4Body"><div class="phase-content" id="phase4Content"><p class="phase-placeholder">Click "Compile" to see TAC...</p></div></div>
+            </div>
+
+            <div class="phase-card" id="phase5" data-phase="5">
+                <div class="phase-header" data-toggle="phase5">
+                    <div class="phase-number">5</div>
+                    <div class="phase-info"><h2>Code Optimization</h2><p>Constant folding, dead code elimination & more</p></div>
+                    <div class="phase-status" id="phase5Status"></div>
+                    <div class="phase-chevron"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
+                </div>
+                <div class="phase-body" id="phase5Body"><div class="phase-content" id="phase5Content"><p class="phase-placeholder">Click "Compile" to see optimizations...</p></div></div>
+            </div>
+
+            <div class="phase-card" id="phase6" data-phase="6">
+                <div class="phase-header" data-toggle="phase6">
+                    <div class="phase-number">6</div>
+                    <div class="phase-info"><h2>Target Code Generation</h2><p>Assembly-like output with register allocation</p></div>
+                    <div class="phase-status" id="phase6Status"></div>
+                    <div class="phase-chevron"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
+                </div>
+                <div class="phase-body" id="phase6Body"><div class="phase-content" id="phase6Content"><p class="phase-placeholder">Click "Compile" to see assembly...</p></div></div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="status-bar" id="statusBar">
+        <div class="status-left">
+            <span class="status-indicator" id="statusIndicator"></span>
+            <span id="statusText">Ready</span>
+        </div>
+        <div class="status-right">
+            <span id="compileTime"></span>
+            <span id="tokenCount"></span>
+        </div>
+    </footer>
+
+    <script src="js/lexer.js"></script>
+    <script src="js/parser.js"></script>
+    <script src="js/semantic.js"></script>
+    <script src="js/icg.js"></script>
+    <script src="js/optimizer.js"></script>
+    <script src="js/codegen.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
